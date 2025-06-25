@@ -24,7 +24,7 @@ def resolve_urls(urls_to_resolve: List[Any], id: int) -> Dict[str, str]:
     Create a map of the vertex ai search urls (very long) to a short url with a unique id for each url.
     Ensures each original URL gets a consistent shortened form while maintaining uniqueness.
     """
-    prefix = "https://vertexaisearch.cloud.google.com/id/"
+    prefix = f"https://vertexaisearch.cloud.google.com/id/"
     urls = [site.web.uri for site in urls_to_resolve]
 
     # Create a dictionary that maps each unique URL to its first occurrence index
@@ -55,9 +55,7 @@ def insert_citation_markers(text, citations_list):
     # This ensures that insertions at the end of the string don't affect
     # the indices of earlier parts of the string that still need to be processed.
     sorted_citations = sorted(
-        citations_list,
-        key=lambda c: (c["end_index"], c["start_index"]),
-        reverse=True,
+        citations_list, key=lambda c: (c["end_index"], c["start_index"]), reverse=True
     )
 
     modified_text = text
@@ -68,14 +66,10 @@ def insert_citation_markers(text, citations_list):
         end_idx = citation_info["end_index"]
         marker_to_insert = ""
         for segment in citation_info["segments"]:
-            marker_to_insert += (
-                f" [{segment['label']}]({segment['short_url']})"
-            )
+            marker_to_insert += f" [{segment['label']}]({segment['short_url']})"
         # Insert the citation marker at the original end_idx position
         modified_text = (
-            modified_text[:end_idx]
-            + marker_to_insert
-            + modified_text[end_idx:]
+            modified_text[:end_idx] + marker_to_insert + modified_text[end_idx:]
         )
 
     return modified_text
@@ -170,3 +164,4 @@ def get_citations(response, resolved_urls_map):
                     pass
         citations.append(citation)
     return citations
+
